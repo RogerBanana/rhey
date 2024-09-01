@@ -1,6 +1,6 @@
 # RHey
 
-**RHey** is an advanced JavaScript/TypeScript array utility library that extends the native `Array` class with powerful methods for manipulating and querying arrays, especially arrays of objects. RHey combines the convenience of common array operations with the flexibility of custom index handling and condition-based operations, making it a valuable tool for any JavaScript developer.
+**RHey** is an advanced JavaScript/TypeScript array utility library that extends the native `Array` class with powerful methods for manipulating and querying arrays, particularly those containing objects. It introduces several innovations like Python-style indexing, condition-based operations, and comprehensive utility functions.
 
 ## Installation
 
@@ -16,13 +16,42 @@ import { RHey } from "rhey";
 
 ## Features
 
-### Basic Array Operations
+### Array Access Enhancements
 
 #### Properties
 
 - **`first`**: Returns the first element in the array.
 - **`last`**: Returns the last element in the array.
-- **`center`**: Returns the center element(s) in the array.
+- **`center`**: Returns the center element(s) in the array. If the array length is odd, it returns the middle element. If even, it returns an array of the two central elements.
+
+#### Python-Style Indexing, Slicing, and Conditional Filtering
+
+- **Negative Indexing**: Access elements from the end of the array using negative indices.
+  - `arr[-1]` gives you the last element.
+- **Slicing**: Extract a portion of the array using Python-like slicing syntax.
+  - `arr['1:3']` returns a new array from index 1 to 2.
+  - `arr[':3']` returns a new array from the start to index 2.
+  - `arr['-3:']` returns the last three elements.
+- **`where(condition: (item: T) => boolean): RHey<T>`**: Filters the sliced array based on a condition, returning a new filtered array.
+
+#### Example
+
+```typescript
+const arr = new RHey(1, 2, 3, 4, 5);
+console.log(arr.first); // Output: 1
+console.log(arr.last); // Output: 5
+console.log(arr.center); // Output: 3
+
+console.log(arr[-1]); // Output: 5
+console.log(arr["1:3"]); // Output: [2, 3]
+console.log(arr[":3"]); // Output: [1, 2, 3]
+console.log(arr["-3:"]); // Output: [3, 4, 5]
+
+// Using where to filter after slicing
+console.log(arr[":5"].where((item) => item > 2)); // Output: [3, 4, 5]
+```
+
+### Basic Array Operations
 
 #### Methods
 
@@ -38,10 +67,6 @@ import { RHey } from "rhey";
 
 ```typescript
 const arr = new RHey(1, 2, 3, 4, 5);
-console.log(arr.first); // Output: 1
-console.log(arr.last); // Output: 5
-console.log(arr.center); // Output: 3
-
 arr.addFirst(0); // [0, 1, 2, 3, 4, 5]
 arr.addLast(6); // [0, 1, 2, 3, 4, 5, 6]
 arr.removeFirst(); // [1, 2, 3, 4, 5, 6]
@@ -140,7 +165,13 @@ const arr2 = new RHey(3, 4, 5, 6);
 console.log(arr1.union(arr2)); // [1, 2, 3, 4, 5, 6]
 console.log(arr1.intersection(arr2)); // [3, 4]
 console.log(arr1.difference(arr2)); // [1, 2]
-console.log(arr1.differenceBy(arr2, "id")); // Assumes arrays of objects with 'id' property
+console.log(
+  arr1.differenceBy(
+    arr2,
+
+    "id"
+  )
+); // Assumes arrays of objects with 'id' property
 ```
 
 ### Array Transformation and Comprehension
@@ -148,6 +179,8 @@ console.log(arr1.differenceBy(arr2, "id")); // Assumes arrays of objects with 'i
 #### Methods
 
 - **`comprehend<U, V>(mapFn: (item: T) => U, filterFn: (item: U) => boolean, reduceFn?: (accumulator: V, item: U) => V, initialValue?: V): U[] | V`**: Applies a map, filter, and optional reduce operation in one step.
+- **`flatten(): RHey<unknown>`**: Flattens a nested array structure.
+- **`unique(): RHey<T>`**: Removes duplicate elements from the array.
 
 #### Example
 
@@ -164,7 +197,7 @@ const result = arr.comprehend(
 console.log(result); // 18 (which is 6 + 8 + 4)
 ```
 
-### Array Utilities
+### Conditional Operations and Utility Methods
 
 #### Methods
 
@@ -172,10 +205,9 @@ console.log(result); // 18 (which is 6 + 8 + 4)
 - **`uniqueByProperty<K extends keyof T>(property: K): RHey<T>`**: Removes duplicate elements based on a specific property.
 - **`extractSubset<K extends keyof T>(...properties: K[]): RHey<Pick<T, K>>`**: Extracts a subset of properties from each element in the array.
 - **`countByPropertyValue<K extends keyof T>(property: K, condition: (value: T[K]) => boolean): number`**: Counts the number of elements that satisfy a condition on a specific property.
-- **`flatten(): RHey<unknown>`**: Flattens a nested array structure.
-- **`unique(): RHey<T>`**: Removes duplicate elements from the array.
 - **`chunk(size: number): RHey<RHey<T>>`**: Splits the array into chunks of a specified size.
 - **`toObject<K extends keyof any, V>(): { [key in K]: V }`**: Converts an array of key-value pairs into an object.
+- **`where(condition: (item: T) => boolean): RHey<T>`**: Filters the array based on a condition, returning a new filtered array.
 
 #### Example
 
@@ -199,20 +231,15 @@ console.log(arr.extractSubset("id", "name")); // [{ id: 1, name: 'apple' }, { id
 // Count by property value
 console.log(arr.countByPropertyValue("price", (price) => price > 100)); // 2
 
-// Flatten
-const nestedArr = new RHey([1, 2], [3, 4], 5);
-console.log(nestedArr.flatten()); // [1, 2, 3, 4, 5]
-
-// Unique
-const duplicateArr = new RHey(1, 2, 2, 3, 4, 4, 5);
-console.log(duplicateArr.unique()); // [1, 2, 3, 4, 5]
-
 // Chunk
 console.log(arr.chunk(2)); // [[{ id: 1, name: 'apple' }, { id: 2, name: 'banana' }], [{ id: 3, name: 'cherry' }]]]
 
 // To Object
 const keyValueArr = new RHey(["a", 1], ["b", 2]);
 console.log(keyValueArr.toObject()); // { a: 1, b: 2 }
+
+// Where
+console.log(arr.where((item) => item.price > 100)); // [{ id: 2, name: 'banana', price: 150 }, { id: 3, name: 'cherry', price: 200 }]
 ```
 
 ## Contribution
