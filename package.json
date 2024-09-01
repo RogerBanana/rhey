@@ -1,0 +1,32 @@
+{
+  "name": "rhey",
+  "version": "0.0.1",
+  "description": "RHey is a powerful extension of JavaScript arrays with additional utility methods for easier manipulation of arrays, particularly with arrays of objects.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "test": "npx tsc examples/test.ts && node examples/test.js"
+  },
+  "keywords": [
+    "array",
+    "utility",
+    "javascript",
+    "typescript",
+    "rhey"
+  ],
+  "author": "Roger Banana",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RogerBanana/rhey.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RogerBanana/rhey/issues"
+  },
+  "homepage": "https://github.com/RogerBanana/rhey#readme",
+  "devDependencies": {
+    "@types/node": "^22.5.1",
+    "typescript": "^5.5.4"
+  }
+}
