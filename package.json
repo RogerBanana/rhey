@@ -1,0 +1,85 @@
+{
+  "name": "rhey",
+  "version": "1.0.0",
+  "description": "Revolutionary array enhancement for JavaScript & TypeScript with Python-like slicing, reactive queries, and magical object manipulation",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write src/**/*.ts",
+    "prepublishOnly": "npm run build && npm run test",
+    "size": "bundlesize"
+  },
+  "keywords": [
+    "array",
+    "typescript",
+    "javascript",
+    "python-slicing",
+    "reactive-queries",
+    "data-manipulation",
+    "functional-programming",
+    "proxy",
+    "utilities"
+  ],
+  "author": {
+    "name": "Marco Rossi",
+    "email": "marco.rossi@example.com"
+  },
+  "contributors": [
+    {
+      "name": "Giulia Bianchi",
+      "email": "giulia.bianchi@example.com"
+    }
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marcorossi/rhey.git"
+  },
+  "homepage": "https://github.com/marcorossi/rhey#readme",
+  "bugs": {
+    "url": "https://github.com/marcorossi/rhey/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.5",
+    "@typescript-eslint/eslint-plugin": "^6.7.4",
+    "@typescript-eslint/parser": "^6.7.4",
+    "bundlesize": "^0.18.1",
+    "eslint": "^8.50.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.0.3",
+    "rollup": "^3.29.4",
+    "@rollup/plugin-typescript": "^11.1.4",
+    "rollup-plugin-terser": "^7.0.2",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.2.2"
+  },
+  "bundlesize": [
+    {
+      "path": "./dist/index.mjs",
+      "maxSize": "8 kB"
+    }
+  ]
+}
