@@ -1,24 +1,29 @@
-# Rhey 🚀
+# Rhey
 
-> **Revolutionary array enhancement for JavaScript & TypeScript**
+> **Enhanced array functionality for JavaScript & TypeScript**
 
-Transform your arrays into powerful, reactive data structures with Python-like slicing, automatic query updates, and magical object manipulation.
+A comprehensive library that extends JavaScript arrays with Python-inspired slicing syntax, reactive query capabilities, and advanced object manipulation methods.
 
-## ✨ Features
+## Overview
 
-🐍 **Python-like Slicing** - `arr['-1']`, `arr['2:5']`, `arr['-3:']`  
-⚡ **Reactive Queries** - Auto-updating filtered views  
-🔮 **Magic Object Slicing** - `users.obj['age>18']`, `products.obj['category:tech']`  
-🎯 **Smart Properties** - `.first`, `.last`, `.center`, `.sum`, `.average`  
-📦 **Tiny Bundle** - < 8KB minified + gzipped  
-🔧 **TypeScript First** - Full type safety with generics  
-🌳 **Tree Shakeable** - Import only what you need
+Rhey emerged from a vision to bridge the gap between JavaScript's native array capabilities and the intuitive data manipulation patterns found in other languages. This library provides a seamless way to work with arrays through familiar syntax while maintaining full TypeScript compatibility and performance optimization.
 
-## 🚀 Quick Start
+## Features
+
+- **Python-inspired Slicing**: Negative indexing and range notation (`arr['-1']`, `arr['2:5']`)
+- **Reactive Query System**: Self-updating filtered views that maintain consistency
+- **Object Array Methods**: Specialized operations for arrays containing objects
+- **Smart Properties**: Computed properties for common operations (`.first`, `.last`, `.sum`)
+- **Full TypeScript Support**: Complete type safety with generic inference
+- **Performance Optimized**: Lazy evaluation and intelligent caching
+
+## Installation
 
 ```bash
 npm install rhey
 ```
+
+## Basic Usage
 
 ```javascript
 import { rhey } from "rhey";
@@ -29,33 +34,39 @@ const users = rhey([
   { name: "Carol", age: 30, role: "admin" },
 ]);
 
-// Create reactive queries that auto-update
+// Create reactive queries
 users.createQuery("adults", (u) => u.age >= 18);
 users.createQuery("admins", (u) => u.role === "admin");
 
 console.log(users.query.adults); // [Alice, Carol]
-console.log(users.query.admins); // [Alice, Carol]
 
-// Add new user - queries update automatically!
+// Queries update automatically when data changes
 users.push({ name: "Dave", age: 22, role: "admin" });
-console.log(users.query.adults); // [Alice, Carol, Dave] ✨
+console.log(users.query.adults); // [Alice, Carol, Dave]
 ```
 
-## 🐍 Python-like Slicing
+## Slicing Operations
+
+### Basic Slicing
 
 ```javascript
 const items = rhey([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
-items[-1]; // 10 (last element)
-items["-1"]; // 10 (string notation)
-items["2:5"]; // [3, 4, 5]
-items[":3"]; // [1, 2, 3] (first 3)
-items["3:"]; // [4, 5, 6, 7, 8, 9, 10] (from index 3)
-items["-3:"]; // [8, 9, 10] (last 3)
-items[":"]; // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] (copy)
+// Negative indexing
+items[-1];        // 10 (last element)
+items["-1"];      // 10 (string notation)
+
+// Range slicing
+items["2:5"];     // [3, 4, 5]
+items[":3"];      // [1, 2, 3] (first 3 elements)
+items["3:"];      // [4, 5, 6, 7, 8, 9, 10] (from index 3)
+items["-3:"];     // [8, 9, 10] (last 3 elements)
+items[":"];       // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] (full copy)
 ```
 
-## 🔮 Magic Object Slicing
+### Object Slicing
+
+For arrays containing objects, Rhey provides query-like syntax:
 
 ```javascript
 const products = rhey([
@@ -64,58 +75,60 @@ const products = rhey([
   { name: "Book", price: 15, category: "education" },
 ]);
 
-// SQL-like filtering with magical syntax
-products.obj["category:tech"]; // All tech products
-products.obj["price<50"]; // Products under $50
-products.obj["price>100"]; // Products over $100
-products.obj["name:*Laptop*"]; // Names containing "Laptop"
+// Property-based filtering
+products.obj["category:tech"];     // All tech products
+products.obj["price<50"];          // Products under $50
+products.obj["price>100"];         // Products over $100
+products.obj["name:*Laptop*"];     // Names containing "Laptop"
 
-// Chain with regular slicing
+// Combine with regular slicing
 products.obj["category:tech"][":1"]; // First tech product
 ```
 
-## ⚡ Reactive Query System
+## Reactive Query System
 
-The killer feature that makes Rhey revolutionary:
+The query system maintains filtered views that automatically update when the underlying data changes:
 
 ```javascript
 const data = rhey([...]);
 
-// Create queries that automatically update
-data.createQuery("filtered", item => item.value > 100);
-data.createQuery("recent", item => item.date > lastWeek);
+// Create named queries
+data.createQuery("highValue", item => item.value > 1000);
+data.createQuery("recent", item => item.date > lastMonth);
 
-// Queries are always fresh
-console.log(data.query.filtered);  // Current results
-console.log(data.query.recent);    // Current results
+// Access current results
+console.log(data.query.highValue);
+console.log(data.query.recent);
 
-// Modify array - queries update instantly
-data.push(newItem);               // Queries refresh automatically
-data.splice(0, 1);               // Queries refresh automatically
+// Data modifications trigger automatic query updates
+data.push(newItem);               // All queries refresh
+data.splice(0, 1);               // All queries refresh
 
 // Query management
-data.deleteQuery("filtered");     // Remove query
-data.refreshQuery("recent");      // Manual refresh (usually not needed)
+data.deleteQuery("highValue");    // Remove query
+data.refreshQuery("recent");      // Force refresh (rarely needed)
 ```
 
-## 🎯 Smart Properties
+## Smart Properties
+
+Computed properties provide instant access to common array operations:
 
 ```javascript
 const numbers = rhey([1, 5, 3, 9, 2, 8]);
 
-numbers.first; // 1
-numbers.last; // 8
-numbers.center; // [3, 9] (middle elements for even length)
-numbers.min; // 1
-numbers.max; // 9
-numbers.sum; // 28
-numbers.average; // 4.67
-numbers.lastIndex; // 5
+numbers.first;      // 1
+numbers.last;       // 8
+numbers.center;     // [3, 9] (middle elements)
+numbers.min;        // 1
+numbers.max;        // 9
+numbers.sum;        // 28
+numbers.average;    // 4.67
+numbers.lastIndex;  // 5
 ```
 
-## 📊 Object Array Methods
+## Object Array Methods
 
-Perfect for data manipulation:
+Specialized methods for working with arrays of objects:
 
 ```javascript
 const employees = rhey([
@@ -124,48 +137,42 @@ const employees = rhey([
   { name: "Carol", dept: "Engineering", salary: 95000 },
 ]);
 
-employees.obj.filterBy("dept", "Engineering"); // Filter by property
-employees.obj.findBy("name", "Alice"); // Find single object
-employees.obj.groupBy("dept"); // Group by department
-employees.obj.sortBy("salary", "desc"); // Sort by salary
-employees.obj.maxBy("salary"); // Highest paid employee
-employees.obj.sumBy("salary"); // Total salary cost
-employees.obj.averageBy("salary"); // Average salary
+// Filtering and searching
+employees.obj.filterBy("dept", "Engineering");
+employees.obj.findBy("name", "Alice");
+
+// Aggregation
+employees.obj.groupBy("dept");
+employees.obj.maxBy("salary");
+employees.obj.minBy("salary");
+employees.obj.sumBy("salary");
+employees.obj.averageBy("salary");
+employees.obj.countBy("dept");
+
+// Sorting
+employees.obj.sortBy("salary", "desc");
+employees.obj.sortBy("name"); // ascending by default
 ```
 
-## 🔄 Method Chaining
+## Method Chaining
 
-Every operation returns a Rhey instance:
+All operations return Rhey instances, enabling fluent method chaining:
 
 ```javascript
-const result = users.obj["role:admin"] // Magic object slicing
-  .where((u) => u.age > 20) // Additional filtering
-  .obj.sortBy("age").first; // Sort by age // Get first result
+const result = users
+  .obj["role:admin"]           // Filter admins
+  .where(u => u.age > 25)      // Additional filtering
+  .obj.sortBy("experience")    // Sort by experience
+  .first;                      // Get first result
 
-// Works with queries too
-users.createQuery("seniorAdmins", (u) => u.role === "admin" && u.age > 30);
-const senior = users.query.seniorAdmins.obj.maxBy("experience");
+// Chain with queries
+users.createQuery("seniorAdmins", u => u.role === "admin" && u.age > 30);
+const topSenior = users.query.seniorAdmins.obj.maxBy("experience");
 ```
 
-## 🔍 Advanced Filtering
+## TypeScript Integration
 
-```javascript
-const data = rhey([10, 15, 20, 25, 30, 35, 40]);
-
-// Slice then filter
-data["2:6"].where((x) => x > 20); // [25, 30]
-data[":"].where((x) => x % 2 === 0); // [10, 20, 30, 40]
-data["-4:"].where((x) => x < 35); // [25, 30]
-
-// Complex object filtering
-const filtered = products.obj["price<100"] // Under $100
-  .where((p) => p.inStock) // In stock
-  .obj.sortBy("rating", "desc"); // Best rated first
-```
-
-## 🎨 TypeScript Support
-
-Full type safety with intelligent inference:
+Rhey provides complete type safety with intelligent generic inference:
 
 ```typescript
 interface User {
@@ -178,106 +185,103 @@ interface User {
 const users = rhey<User>([...]);
 
 // Full autocomplete and type checking
-users.obj.filterBy('active', true);     // ✅
-users.obj.maxBy('age');                 // ✅
-users.createQuery("adults", u => u.age >= 18); // ✅
+users.obj.filterBy('active', true);        // ✓ Valid
+users.obj.maxBy('age');                     // ✓ Valid
+users.createQuery("adults", u => u.age >= 18); // ✓ Valid
 
-// Type errors caught at compile time
-users.obj.filterBy('invalid', true);    // ❌ TypeScript error
-users.obj.maxBy('nonexistent');         // ❌ TypeScript error
+// Compile-time error detection
+users.obj.filterBy('invalid', true);       // ✗ TypeScript error
+users.obj.maxBy('nonexistent');            // ✗ TypeScript error
 ```
 
-## 📈 Performance
+## Performance Characteristics
 
-Rhey is built for performance:
+- **Lazy Evaluation**: Query results computed only when accessed
+- **Intelligent Caching**: Results cached with automatic invalidation on data changes
+- **Native Method Usage**: Leverages optimized native Array methods where possible
+- **Memory Efficiency**: Minimal overhead per Rhey instance
+- **Tree Shaking Support**: Import only the methods you need
 
-- **Lazy Query Evaluation** - Queries computed only when accessed
-- **Smart Caching** - Results cached with automatic invalidation
-- **Native Methods** - Uses optimized native Array methods
-- **Memory Efficient** - Minimal overhead per instance
-- **Tree Shaking** - Dead code elimination support
+## API Reference
 
-## 🛠 API Reference
+### Constructor
+- `rhey<T>(array: T[])` - Create new Rhey instance
 
-### Core Methods
-
-- `rhey(array)` - Create new Rhey instance
-- `.array` - Get copy of underlying array
-- `.toArray()` - Alias for `.array`
-- `.where(condition)` - Filter with condition
-- `.length` - Array length
+### Core Properties
+- `.array: T[]` - Get copy of underlying array
+- `.length: number` - Array length
+- `.lastIndex: number` - Last valid index
 
 ### Smart Properties
+- `.first: T` - First element
+- `.last: T` - Last element  
+- `.center: T | T[]` - Center element(s)
+- `.min: T` - Minimum value
+- `.max: T` - Maximum value
+- `.sum: number` - Sum (numeric arrays)
+- `.average: number` - Average (numeric arrays)
 
-- `.first` - First element
-- `.last` - Last element
-- `.center` - Center element(s)
-- `.min` - Minimum value
-- `.max` - Maximum value
-- `.sum` - Sum of numeric values
-- `.average` - Average of numeric values
-- `.lastIndex` - Last valid index
+### Core Methods
+- `.toArray(): T[]` - Get array copy
+- `.where(condition: (item: T) => boolean): Rhey<T>` - Filter elements
 
 ### Query System
+- `.createQuery(name: string, condition: (item: T) => boolean): void`
+- `.deleteQuery(name: string): void`
+- `.refreshQuery(name: string): void`
+- `.query: { [name: string]: Rhey<T> }`
 
-- `.createQuery(name, condition)` - Create reactive query
-- `.deleteQuery(name)` - Remove query
-- `.refreshQuery(name)` - Manual refresh
-- `.query[name]` - Access query results
+### Object Methods (when T extends object)
+- `.obj.filterBy<K extends keyof T>(prop: K, value: T[K]): Rhey<T>`
+- `.obj.findBy<K extends keyof T>(prop: K, value: T[K]): T | undefined`
+- `.obj.groupBy<K extends keyof T>(prop: K): { [key: string]: Rhey<T> }`
+- `.obj.sortBy<K extends keyof T>(prop: K, order?: 'asc' | 'desc'): Rhey<T>`
+- `.obj.maxBy<K extends keyof T>(prop: K): T`
+- `.obj.minBy<K extends keyof T>(prop: K): T`
+- `.obj.sumBy<K extends keyof T>(prop: K): number`
+- `.obj.averageBy<K extends keyof T>(prop: K): number`
+- `.obj.countBy<K extends keyof T>(prop: K): { [key: string]: number }`
 
-### Object Methods
+### Native Array Methods
+All standard Array methods are available: `push`, `pop`, `shift`, `unshift`, `splice`, `forEach`, `map`, `filter`, `reduce`, `find`, `indexOf`, etc.
 
-- `.obj.filterBy(prop, value)` - Filter by property
-- `.obj.findBy(prop, value)` - Find by property
-- `.obj.groupBy(prop)` - Group by property
-- `.obj.sortBy(prop, order?)` - Sort by property
-- `.obj.maxBy(prop)` - Max by property
-- `.obj.minBy(prop)` - Min by property
-- `.obj.sumBy(prop)` - Sum by property
-- `.obj.averageBy(prop)` - Average by property
-- `.obj.countBy(prop)` - Count by property
+## Examples
 
-### Array Methods
+### Data Analysis
+```javascript
+const sales = rhey([
+  { product: "Laptop", amount: 1200, region: "North", date: "2024-01-15" },
+  { product: "Mouse", amount: 25, region: "South", date: "2024-01-16" },
+  // ... more data
+]);
 
-All native Array methods available: `push`, `pop`, `shift`, `unshift`, `splice`, `forEach`, `map`, `filter`, etc.
+// Create analytical queries
+sales.createQuery("highValue", s => s.amount > 500);
+sales.createQuery("recent", s => new Date(s.date) > lastWeek);
 
-## 🗺 Roadmap
+// Generate reports
+const totalSales = sales.obj.sumBy("amount");
+const avgSale = sales.obj.averageBy("amount");
+const topProduct = sales.obj.maxBy("amount");
+const salesByRegion = sales.obj.groupBy("region");
+```
 
-**v1.x** - Core Features ✅
+### Complex Filtering
+```javascript
+const inventory = rhey([...]);
 
-- Python slicing & Magic object slicing
-- Reactive query system
-- Smart properties & Object methods
+// Multi-step filtering with chaining
+const criticalItems = inventory
+  .obj["category:electronics"]     // Electronics only
+  .where(item => item.stock < 10)  // Low stock
+  .obj.sortBy("priority", "desc")  // Sort by priority
+  [":5"];                          // Top 5 items
 
-**v2.x** - Advanced Math (Coming Soon)
+// Dynamic queries
+inventory.createQuery("lowStock", item => item.stock < item.minStock);
+inventory.createQuery("overstock", item => item.stock > item.maxStock * 2);
+```
 
-- Statistical functions (`median`, `variance`, `stdDev`)
-- Matrix operations (`transpose`, `multiply`)
-- Element-wise operations (`elementWiseAdd`, `dotProduct`)
+## License
 
-**v3.x** - Advanced Utils (Planned)
-
-- Array manipulation (`chunk`, `zip`, `flatten`)
-- Advanced random operations (`partition`, `subset`)
-- Query combinations & advanced filtering
-
-## 📄 License
-
-MIT © Marco Rossi
-
-## 🤝 Contributing
-
-Contributions welcome! Please read our [Contributing Guide](CONTRIBUTING.md) first.
-
-## 💝 Support
-
-If Rhey makes your JavaScript/TypeScript development better, consider:
-
-- ⭐ Starring the repo
-- 🐛 Reporting bugs
-- 💡 Suggesting features
-- 📝 Improving documentation
-
----
-
-**Made with ❤️ for the JavaScript community**
+MIT
