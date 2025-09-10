@@ -15,11 +15,16 @@ export interface QueryRegistry<T> {
 
 // Slicing types
 export type SliceNotation = string | number;
-export type SliceResult<T> = T | T[] | T[][];
+export type SliceResult<T> = T | T[] | T[][] | undefined;
 
 // Object slicing types
 export type ObjectSliceOperator = ":" | ">" | "<" | ">=" | "<=" | "!=";
 export type ObjectSlicePattern = `${string}${ObjectSliceOperator}${string}`;
+
+// Forward declaration for circular reference
+export declare class RheyArray<T = any> {
+  constructor(array: T[]);
+}
 
 // Property access types for objects
 export interface ObjectArrayMethods<T extends Record<string, any>> {
@@ -43,7 +48,7 @@ export interface IRheyArray<T> {
   // Smart properties
   readonly first: T | undefined;
   readonly last: T | undefined;
-  readonly center: T | T[];
+  readonly center: T | T[] | undefined;
   readonly min: T | undefined;
   readonly max: T | undefined;
   readonly sum: number;
@@ -52,10 +57,10 @@ export interface IRheyArray<T> {
 
   // Query system
   readonly query: QueryRegistry<T>;
-  createQuery(name: string, condition: QueryCondition<T>): this;
+  createQuery(name: string, condition: QueryCondition<T>): RheyArray<T>;
   deleteQuery(name: string): boolean;
-  refreshQuery(name: string): this;
-  refreshAllQueries(): this;
+  refreshQuery(name: string): RheyArray<T>;
+  refreshAllQueries(): RheyArray<T>;
 
   // Object methods (when T extends object)
   readonly obj: T extends Record<string, any> ? ObjectArrayMethods<T> : never;
@@ -63,9 +68,4 @@ export interface IRheyArray<T> {
   // Utility methods
   where(condition: QueryCondition<T>): RheyArray<T>;
   toArray(): T[];
-}
-
-// Main class export
-export declare class RheyArray<T = any> implements IRheyArray<T> {
-  constructor(array: T[]);
 }

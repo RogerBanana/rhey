@@ -40,7 +40,7 @@ export class RheyArray<T = any> implements IRheyArray<T> {
     return this._array[this._array.length - 1];
   }
 
-  get center(): T | T[] {
+  get center(): T | T[] | undefined {
     const len = this._array.length;
     if (len === 0) return undefined;
     if (len === 1) return this._array[0];
@@ -88,7 +88,7 @@ export class RheyArray<T = any> implements IRheyArray<T> {
     return this._queryCache;
   }
 
-  createQuery(name: string, condition: QueryCondition<T>): this {
+  createQuery(name: string, condition: QueryCondition<T>): RheyArray<T> {
     const queryDef: QueryDefinition<T> = {
       condition,
       cache: this._array.filter(condition),
@@ -108,7 +108,7 @@ export class RheyArray<T = any> implements IRheyArray<T> {
     return deleted;
   }
 
-  refreshQuery(name: string): this {
+  refreshQuery(name: string): RheyArray<T> {
     const queryDef = this._queries.get(name);
     if (queryDef) {
       queryDef.cache = this._array.filter(queryDef.condition);
@@ -118,7 +118,7 @@ export class RheyArray<T = any> implements IRheyArray<T> {
     return this;
   }
 
-  refreshAllQueries(): this {
+  refreshAllQueries(): RheyArray<T> {
     for (const [name] of this._queries) {
       this.refreshQuery(name);
     }
@@ -162,7 +162,7 @@ export class RheyArray<T = any> implements IRheyArray<T> {
   // ==================== Array Modification Methods ====================
   // These methods modify the internal array and refresh queries
 
-  push(...items: T[]): this {
+  push(...items: T[]): RheyArray<T> {
     this._array.push(...items);
     this._onArrayModified();
     return this;
@@ -180,7 +180,7 @@ export class RheyArray<T = any> implements IRheyArray<T> {
     return item;
   }
 
-  unshift(...items: T[]): this {
+  unshift(...items: T[]): RheyArray<T> {
     this._array.unshift(...items);
     this._onArrayModified();
     return this;
