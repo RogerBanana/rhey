@@ -1,11 +1,11 @@
-import { ObjectHandler } from "../handlers/object-handler";
-import { createProxyHandler } from "./proxy-handler";
+import { ObjectHandler } from '../handlers/object-handler';
+import { createProxyHandler } from './proxy-handler';
 import type {
   IRheyArray,
   QueryDefinition,
   QueryCondition,
-  QueryRegistry,
-} from "../types";
+  QueryRegistry
+} from '../types';
 
 export class RheyArray<T = any> implements IRheyArray<T> {
   private _array: T[];
@@ -65,13 +65,13 @@ export class RheyArray<T = any> implements IRheyArray<T> {
 
   get sum(): number {
     return this._array.reduce((sum, item) => {
-      return typeof item === "number" ? sum + item : sum;
+      return typeof item === 'number' ? sum + item : sum;
     }, 0);
   }
 
   get average(): number {
     const numbers = this._array.filter(
-      (item) => typeof item === "number"
+      (item) => typeof item === 'number'
     ) as number[];
     return numbers.length > 0
       ? numbers.reduce((a, b) => a + b) / numbers.length
@@ -92,7 +92,7 @@ export class RheyArray<T = any> implements IRheyArray<T> {
     const queryDef: QueryDefinition<T> = {
       condition,
       cache: this._array.filter(condition),
-      lastUpdated: Date.now(),
+      lastUpdated: Date.now()
     };
 
     this._queries.set(name, queryDef);
@@ -215,7 +215,7 @@ export class RheyArray<T = any> implements IRheyArray<T> {
   // ==================== Debugging ====================
 
   toString(): string {
-    return `RheyArray(${this._array.length}) [${this._array.join(", ")}]`;
+    return `RheyArray(${this._array.length}) [${this._array.join(', ')}]`;
   }
 
   valueOf(): T[] {

@@ -1,18 +1,18 @@
-import type { RheyArray } from "../core/rhey";
-import type { ObjectSlicePattern } from "../types";
+import type { RheyArray } from '../core/rhey';
+import type { ObjectSlicePattern } from '../types';
 
 export class ObjectHandler<T extends Record<string, any>> {
   constructor(private rheyInstance: RheyArray<T>) {
     return new Proxy(this, {
       get: (target, prop: string) => {
         // Handle magic object slicing like obj['name:Mario']
-        if (typeof prop === "string" && this.isSlicePattern(prop)) {
+        if (typeof prop === 'string' && this.isSlicePattern(prop)) {
           return this.parseAndFilter(prop);
         }
 
         // Handle regular method calls
         return target[prop as keyof ObjectHandler<T>];
-      },
+      }
     });
   }
 
@@ -33,17 +33,17 @@ export class ObjectHandler<T extends Record<string, any>> {
       const itemValue = item[property];
 
       switch (operator) {
-        case ":":
+        case ':':
           return this.handleEquals(itemValue, value);
-        case ">":
+        case '>':
           return itemValue > this.parseValue(value);
-        case "<":
+        case '<':
           return itemValue < this.parseValue(value);
-        case ">=":
+        case '>=':
           return itemValue >= this.parseValue(value);
-        case "<=":
+        case '<=':
           return itemValue <= this.parseValue(value);
-        case "!=":
+        case '!=':
           return itemValue !== this.parseValue(value);
         default:
           return false;
@@ -65,7 +65,7 @@ export class ObjectHandler<T extends Record<string, any>> {
     operator: string;
     value: string;
   } {
-    const operators = [">=", "<=", "!=", ">", "<", ":"];
+    const operators = ['>=', '<=', '!=', '>', '<', ':'];
 
     for (const op of operators) {
       const index = pattern.indexOf(op);
@@ -73,7 +73,7 @@ export class ObjectHandler<T extends Record<string, any>> {
         return {
           property: pattern.slice(0, index),
           operator: op,
-          value: pattern.slice(index + op.length),
+          value: pattern.slice(index + op.length)
         };
       }
     }
@@ -86,8 +86,8 @@ export class ObjectHandler<T extends Record<string, any>> {
    */
   private handleEquals(itemValue: any, pattern: string): boolean {
     // Multiple values: "category:tech,education,books"
-    if (pattern.includes(",")) {
-      const values = pattern.split(",").map((v) => v.trim());
+    if (pattern.includes(',')) {
+      const values = pattern.split(',').map((v) => v.trim());
       return values.some((val) => this.matchValue(itemValue, val));
     }
 
@@ -102,12 +102,12 @@ export class ObjectHandler<T extends Record<string, any>> {
     const strPattern = pattern.toLowerCase();
 
     // Wildcard matching: *text* (contains), *text (ends with), text* (starts with)
-    if (strPattern.includes("*")) {
+    if (strPattern.includes('*')) {
       const regex = new RegExp(
         strPattern
-          .replace(/\*/g, ".*")
-          .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-          .replace(/\\\.\\\*/g, ".*")
+          .replace(/\*/g, '.*')
+          .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+          .replace(/\\\.\\\*/g, '.*')
       );
       return regex.test(strValue);
     }
@@ -120,10 +120,10 @@ export class ObjectHandler<T extends Record<string, any>> {
    * Parse value to appropriate type
    */
   private parseValue(value: string): any {
-    if (value === "true") return true;
-    if (value === "false") return false;
-    if (value === "null") return null;
-    if (value === "undefined") return undefined;
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    if (value === 'null') return null;
+    if (value === 'undefined') return undefined;
 
     const num = Number(value);
     if (!isNaN(num)) return num;
@@ -161,14 +161,14 @@ export class ObjectHandler<T extends Record<string, any>> {
 
   sortBy<K extends keyof T>(
     property: K,
-    order: "asc" | "desc" = "asc"
+    order: 'asc' | 'desc' = 'asc'
   ): RheyArray<T> {
     const sorted = [...this.rheyInstance.array].sort((a, b) => {
       const aVal = a[property];
       const bVal = b[property];
 
-      if (aVal < bVal) return order === "asc" ? -1 : 1;
-      if (aVal > bVal) return order === "asc" ? 1 : -1;
+      if (aVal < bVal) return order === 'asc' ? -1 : 1;
+      if (aVal > bVal) return order === 'asc' ? 1 : -1;
       return 0;
     });
 
@@ -208,14 +208,14 @@ export class ObjectHandler<T extends Record<string, any>> {
   sumBy<K extends keyof T>(property: K): number {
     return this.rheyInstance.array.reduce((sum, item) => {
       const value = item[property];
-      return typeof value === "number" ? sum + value : sum;
+      return typeof value === 'number' ? sum + value : sum;
     }, 0);
   }
 
   averageBy<K extends keyof T>(property: K): number {
     const sum = this.sumBy(property);
     const count = this.rheyInstance.array.filter(
-      (item) => typeof item[property] === "number"
+      (item) => typeof item[property] === 'number'
     ).length;
 
     return count > 0 ? sum / count : 0;

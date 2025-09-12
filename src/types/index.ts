@@ -18,7 +18,7 @@ export type SliceNotation = string | number;
 export type SliceResult<T> = T | T[] | T[][] | undefined;
 
 // Object slicing types
-export type ObjectSliceOperator = ":" | ">" | "<" | ">=" | "<=" | "!=";
+export type ObjectSliceOperator = ':' | '>' | '<' | '>=' | '<=' | '!=';
 export type ObjectSlicePattern = `${string}${ObjectSliceOperator}${string}`;
 
 // Forward declaration for circular reference
@@ -31,7 +31,7 @@ export interface ObjectArrayMethods<T extends Record<string, any>> {
   filterBy<K extends keyof T>(property: K, value: T[K]): RheyArray<T>;
   findBy<K extends keyof T>(property: K, value: T[K]): T | undefined;
   groupBy<K extends keyof T>(property: K): Record<string, T[]>;
-  sortBy<K extends keyof T>(property: K, order?: "asc" | "desc"): RheyArray<T>;
+  sortBy<K extends keyof T>(property: K, order?: 'asc' | 'desc'): RheyArray<T>;
   countBy<K extends keyof T>(property: K): Record<string, number>;
   maxBy<K extends keyof T>(property: K): T | undefined;
   minBy<K extends keyof T>(property: K): T | undefined;

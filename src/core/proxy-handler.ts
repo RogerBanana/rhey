@@ -1,26 +1,26 @@
-import type { RheyArray } from "./rhey";
-import type { SliceNotation, SliceResult } from "../types";
+import type { RheyArray } from './rhey';
+import type { SliceNotation, SliceResult } from '../types';
 
 export function createProxyHandler<T>() {
   return {
     get(target: RheyArray<T>, prop: string | symbol): any {
       // Handle numeric indices and string slice notation
       if (
-        typeof prop === "string" &&
+        typeof prop === 'string' &&
         (isNumericIndex(prop) || isSliceNotation(prop))
       ) {
         return handleSlicing(target, prop);
       }
 
       // Handle negative numeric access like obj[-1]
-      if (typeof prop === "number" && prop < 0) {
+      if (typeof prop === 'number' && prop < 0) {
         const index = target.array.length + prop;
         return index >= 0 ? target.array[index] : undefined;
       }
 
       // Regular property access
       return target[prop as keyof RheyArray<T>];
-    },
+    }
   };
 }
 
@@ -36,7 +36,7 @@ function isNumericIndex(prop: string): boolean {
  */
 function isSliceNotation(prop: string): boolean {
   // Patterns: '2:5', ':3', '3:', ':', '-1:', ':-1', etc.
-  return /^-?\d*:-?\d*$/.test(prop) || prop === ":";
+  return /^-?\d*:-?\d*$/.test(prop) || prop === ':';
 }
 
 /**
@@ -44,7 +44,7 @@ function isSliceNotation(prop: string): boolean {
  */
 function handleSlicing<T>(target: RheyArray<T>, prop: string): SliceResult<T> {
   // Handle multiple slices: ':2,5:7,8:'
-  if (prop.includes(",")) {
+  if (prop.includes(',')) {
     return handleMultipleSlices(target, prop);
   }
 
@@ -66,7 +66,7 @@ function handleSlicing<T>(target: RheyArray<T>, prop: string): SliceResult<T> {
  * Handle multiple slice notation: ':2,5:7,8:'
  */
 function handleMultipleSlices<T>(target: RheyArray<T>, prop: string): T[][] {
-  const slices = prop.split(",").map((s) => s.trim());
+  const slices = prop.split(',').map((s) => s.trim());
   const results: T[][] = [];
 
   for (const slice of slices) {
@@ -85,15 +85,15 @@ function handleSingleSlice<T>(target: RheyArray<T>, slice: string): T[] {
   const length = array.length;
 
   // Full array copy
-  if (slice === ":") {
+  if (slice === ':') {
     return [...array];
   }
 
-  const [startStr, endStr] = slice.split(":");
+  const [startStr, endStr] = slice.split(':');
 
   // Parse start index
   let start: number;
-  if (startStr === "") {
+  if (startStr === '') {
     start = 0;
   } else {
     start = parseInt(startStr);
@@ -102,7 +102,7 @@ function handleSingleSlice<T>(target: RheyArray<T>, slice: string): T[] {
 
   // Parse end index
   let end: number;
-  if (endStr === "") {
+  if (endStr === '') {
     end = length;
   } else {
     end = parseInt(endStr);
