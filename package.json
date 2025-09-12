@@ -12,10 +12,8 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsc --watch",
-    "clean": "rmdir /s dist || rm -rf dist",
-    "minify": "terser dist/index.js -o dist/index.min.js --compress --mangle",
-    "package": "npm run build && npm run minify",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint"
   },
   "keywords": [
     "array",
