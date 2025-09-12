@@ -10,7 +10,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsup",
     "dev": "tsc --watch",
     "clean": "rmdir /s dist || rm -rf dist",
     "minify": "terser dist/index.js -o dist/index.min.js --compress --mangle",
@@ -39,8 +39,9 @@
     "node": ">=18.0.0"
   },
   "devDependencies": {
-    "typescript": "^5.2.2",
     "@types/node": "^20.0.0",
-    "terser": "^5.19.0"
+    "terser": "^5.19.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.2.2"
   }
 }
