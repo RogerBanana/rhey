@@ -14,7 +14,8 @@
     "dev": "tsc --watch",
     "clean": "rmdir /s dist || rm -rf dist",
     "minify": "terser dist/index.js -o dist/index.min.js --compress --mangle",
-    "package": "npm run build && npm run minify"
+    "package": "npm run build && npm run minify",
+    "test": "jest"
   },
   "keywords": [
     "array",
@@ -39,9 +40,13 @@
     "node": ">=18.0.0"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.0.0",
+    "jest": "^30.1.3",
     "terser": "^5.19.0",
+    "ts-jest": "^29.4.1",
+    "ts-node": "^10.9.2",
     "tsup": "^8.5.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.9.2"
   }
 }
